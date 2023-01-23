@@ -30,23 +30,26 @@ def initPolyObject(poly):
     polygon_obj = polygon(layer, datatype, numVertices, vertexList)
     poly_objList.append(polygon_obj)
 
-# Function to print a polygon object as a string
-def writePolyObjects(poly_objList):
+# Function to return first 'num' polygon objects as a string
+def writePolyObjects(poly_objList, num=None):
     poly_strs = []
 
-    for poly_obj in poly_objList:
+    if num == None:
+        num = len(poly_objList)
+
+    for i in range(num):
         str = ''
         str += 'boundary\n'
-        str += f'layer {poly_obj.layer}\n'
-        str += f'datatype {poly_obj.datatype}\n'
-        str += f'xy  {poly_obj.numVertices}'
+        str += f'layer {poly_objList[i].layer}\n'
+        str += f'datatype {poly_objList[i].datatype}\n'
+        str += f'xy  {poly_objList[i].numVertices}'
 
-        for vertex in poly_obj.vertexList:
+        for vertex in poly_objList[i].vertexList:
             str += f'  {vertex}'
 
         str += '\nendel\n'
         poly_strs.append(str)
-    
+
     return poly_strs
         
 
@@ -67,14 +70,14 @@ with open(milestone1_source, 'r') as rf:
     for poly in polygon_list:
         initPolyObject(poly)
 
-
-    polyStrings = writePolyObjects(poly_objList)
+    # Specify number of polygons to print here
+    polyStrings = writePolyObjects(poly_objList, num=2)
 
     with open(milestone1_output, 'w') as rw:
         rw.write(header)
 
-        for polygon in polygon_list:
-            for line in polygon:
+        for polystr in polyStrings:
+            for line in polystr:
                 rw.write(line)
 
         rw.write(footer)
